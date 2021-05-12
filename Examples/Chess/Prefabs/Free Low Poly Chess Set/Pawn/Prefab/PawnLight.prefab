@@ -124,6 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dea2ff1b32a4c88b6e8e1ecd5bb7fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colour: 0
+  colour: 1
   figureType: 0
   handTag: Player
+  boardManager: {fileID: 0}

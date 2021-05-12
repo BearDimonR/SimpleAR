@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!65 &1814488490364987240
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1812912694502566230}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 10.000001, y: 0.6661413, z: 10.000001}
-  m_Center: {x: 3.4999995, y: -0.21688165, z: 3.5000005}
 --- !u!1 &1814488492004449639
 GameObject:
   m_ObjectHideFlags: 0
@@ -43,7 +30,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1810969531760811132}
+  - {fileID: 3905078067384478333}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -64,17 +51,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5db6a6ef003409a84b0a5f15241890a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _selectedCell:
-    id: 0
   activeFigures: []
   isWhiteTurn: 1
+  <SelectedCell>k__BackingField:
+    id: 0
   references:
     version: 1
     00000000:
-      type: {class: IntCell, ns: SimpleAR.Examples.Chess, asm: Assembly-CSharp}
+      type: {class: IntCell, ns: SimpleAR.Examples.Chess.Scripts.Utils, asm: Assembly-CSharp}
       data:
-        X: -1
-        Y: -1
+        x: -1
+        y: -1
 --- !u!114 &1814488492004449563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,7 +103,7 @@ MonoBehaviour:
   highlightPrefab: {fileID: 8643662240604519307, guid: f3a5043c93ee4f44abad689d3ef61b03,
     type: 3}
   prefabScale: {x: 0, y: 0, z: 0}
-  boardInstance: {fileID: 1812912694502566230}
+  boardInstance: {fileID: 3907020577326063447}
   boardManager: {fileID: 0}
 --- !u!114 &1814488492004449636
 MonoBehaviour:
@@ -131,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardManager: {fileID: 1814488492004449637}
---- !u!1001 &1814488491631556784
+--- !u!1001 &3908595977301118641
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -141,10 +128,6 @@ PrefabInstance:
     - target: {fileID: 1857998089916902, guid: 5b856ec4f8f8cb84f861f8f8a026c288, type: 3}
       propertyPath: m_Name
       value: Board
-      objectReference: {fileID: 0}
-    - target: {fileID: 1857998089916902, guid: 5b856ec4f8f8cb84f861f8f8a026c288, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4363527306552524, guid: 5b856ec4f8f8cb84f861f8f8a026c288, type: 3}
       propertyPath: m_RootOrder
@@ -164,7 +147,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4363527306552524, guid: 5b856ec4f8f8cb84f861f8f8a026c288, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4363527306552524, guid: 5b856ec4f8f8cb84f861f8f8a026c288, type: 3}
       propertyPath: m_LocalPosition.y
@@ -204,15 +187,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b856ec4f8f8cb84f861f8f8a026c288, type: 3}
---- !u!1 &1812912694502566230 stripped
+--- !u!1 &3907020577326063447 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1857998089916902, guid: 5b856ec4f8f8cb84f861f8f8a026c288,
     type: 3}
-  m_PrefabInstance: {fileID: 1814488491631556784}
+  m_PrefabInstance: {fileID: 3908595977301118641}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1810969531760811132 stripped
+--- !u!4 &3905078067384478333 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4363527306552524, guid: 5b856ec4f8f8cb84f861f8f8a026c288,
     type: 3}
-  m_PrefabInstance: {fileID: 1814488491631556784}
+  m_PrefabInstance: {fileID: 3908595977301118641}
   m_PrefabAsset: {fileID: 0}

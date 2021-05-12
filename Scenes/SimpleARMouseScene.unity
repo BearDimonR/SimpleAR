@@ -360,10 +360,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChessBoard
       objectReference: {fileID: 0}
+    - target: {fileID: 1814488492004449639, guid: 36bd0c2ffbe1b3d48ac532f25cb79c20,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3907020577326063447, guid: 36bd0c2ffbe1b3d48ac532f25cb79c20,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36bd0c2ffbe1b3d48ac532f25cb79c20, type: 3}
@@ -778,6 +783,11 @@ PrefabInstance:
     - target: {fileID: 5979266875273363750, guid: ebe046d08ed87f74c92d400f6422ea6e,
         type: 3}
       propertyPath: Depth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5979266875273363750, guid: ebe046d08ed87f74c92d400f6422ea6e,
+        type: 3}
+      propertyPath: depth
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

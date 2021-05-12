@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SimpleAR.Examples.Chess.Scripts.Figures;
+using SimpleAR.Examples.Chess.Scripts.Utils;
 using UnityEngine;
 
 namespace SimpleAR.Examples.Chess.Scripts
@@ -7,30 +8,22 @@ namespace SimpleAR.Examples.Chess.Scripts
     [RequireComponent(typeof(VisualizationManager))]
     public class BoardManager : MonoBehaviour
     {
-
-        public static IntCell Size { get; } = new IntCell(8, 8);
-        
-        [SerializeReference]
-        private IntCell _selectedCell = new IntCell(-1, -1);
-
-        public IntCell SelectedCell
-        {
-            get => _selectedCell;
-            set => _selectedCell = value;
-        }
-        
-
-        private bool[,] _allowedMoves = new bool[Size.X, Size.Y];
-        public Figure[,] FigurePositions { get; set; } = new Figure[Size.X, Size.Y];
-        
-        public Figure SelectedFigure { get; set; }
-
-        public List<GameObject> activeFigures = new List<GameObject>(Size.X * 5);
-
-        protected VisualizationManager _visualizationManager;
-        public VisualizationManager VisualizationManager => _visualizationManager;
+        public List<GameObject> activeFigures = new List<GameObject>(Size.x * 5);
 
         public bool isWhiteTurn = true;
+        
+        private bool[,] _allowedMoves = new bool[Size.x, Size.y];
+
+        private VisualizationManager _visualizationManager;
+
+        public static IntCell Size { get; } = new IntCell(8, 8);
+
+        [field: SerializeReference] public IntCell SelectedCell { get; set; } = new IntCell(-1, -1);
+
+        public Figure[,] FigurePositions { get; set; } = new Figure[Size.x, Size.y];
+
+        public Figure SelectedFigure { get; set; }
+        public VisualizationManager VisualizationManager => _visualizationManager;
 
         protected void Awake()
         {
@@ -42,37 +35,34 @@ namespace SimpleAR.Examples.Chess.Scripts
         {
             StartGame();
         }
-        public void StartGame()
+
+        private void StartGame()
         {
             InstantiateAllFigures();
         }
 
-        public void InstantiateAllFigures()
+        private void InstantiateAllFigures()
         {
             InstantiateSide(1, 0, FigureColour.Black);
-            InstantiateSide(Size.Y - 2, Size.Y - 1, FigureColour.White);
+            InstantiateSide(Size.y - 2, Size.y - 1, FigureColour.White);
         }
 
         private void InstantiateSide(int rowPawn, int rowKing, FigureColour colour)
         {
-            for (int i = 0; i < Size.Y; ++i)
-            {
-                InstantiateFigure(rowPawn, i, FigureType.Pawn, colour);
-            }
+            for (var i = 0; i < Size.y; ++i) InstantiateFigure(rowPawn, i, FigureType.Pawn, colour);
             InstantiateFigure(rowKing, 0, FigureType.Rook, colour);
             InstantiateFigure(rowKing, 7, FigureType.Rook, colour);
-            
+
             InstantiateFigure(rowKing, 1, FigureType.Knight, colour);
             InstantiateFigure(rowKing, 6, FigureType.Knight, colour);
-            
+
             InstantiateFigure(rowKing, 2, FigureType.Bishop, colour);
             InstantiateFigure(rowKing, 5, FigureType.Bishop, colour);
-            
+
             InstantiateFigure(rowKing, 3, FigureType.Queen, colour);
             InstantiateFigure(rowKing, 4, FigureType.King, colour);
-
         }
-        
+
         private void InstantiateFigure(int rowX, int cellY, FigureType type, FigureColour colour)
         {
             var figureObject = _visualizationManager.InstantiateFigure(rowX, cellY, type, colour.Bool());
@@ -81,29 +71,15 @@ namespace SimpleAR.Examples.Chess.Scripts
             figure.Cell = new IntCell(rowX, cellY);
             figure.StartCell = new IntCell(rowX, cellY);
             figure.boardManager = this;
-            
+
             // add to arrays
-            FigurePositions[figure.Cell.X, figure.Cell.Y] = figure;
+            FigurePositions[figure.Cell.x, figure.Cell.y] = figure;
             activeFigures.Add(figureObject);
-        }
-
-        private void Update()
-        {
-            // Vector3 handPoint = HandDetector.Instance.HandInfos[0].HandPoints.PalmCentre;
-            //
-            //
-            // Ray ray = new Ray(handPoint, Vector3.down);
-            // //Debug.DrawRay(handPoint, Vector3.down * 100f, Color.red);
-            // if (Physics.Raycast(ray, out RaycastHit hit, 20f, 1 << LayerMask.NameToLayer("ChessBoard")))
-            // {
-            //     _selectedCell = _visualizationManager.PositionToCell(hit.point);
-            // }
-
         }
 
         public void SelectFigure(int x, int y)
         {
-            if (SelectedFigure != null && x == SelectedFigure.Cell.X && y == SelectedFigure.Cell.Y)
+            if (SelectedFigure != null && x == SelectedFigure.Cell.x && y == SelectedFigure.Cell.y)
             {
                 Deselect();
                 return;
@@ -112,31 +88,26 @@ namespace SimpleAR.Examples.Chess.Scripts
             var pos = FigurePositions[x, y];
             if (pos == null || pos.colour.Bool() != isWhiteTurn) return;
 
-            bool hasAtLeastOneMove = false;
+            var hasAtLeastOneMove = false;
             _allowedMoves = FigurePositions[x, y].PossibleMoves();
 
-            for (int i = 0; i < Size.X; i++)
-            {
-                for (int j = 0; j < Size.Y; j++)
+            for (var i = 0; i < Size.x; i++)
+            for (var j = 0; j < Size.y; j++)
+                if (_allowedMoves[i, j])
                 {
-                    if (_allowedMoves[i, j])
-                    {
-                        hasAtLeastOneMove = true;
+                    hasAtLeastOneMove = true;
 
-                        i = 7;
-                        break;
-                    }
+                    i = 7;
+                    break;
                 }
-            }
-            
+
             if (!hasAtLeastOneMove) return;
 
             SelectedFigure = pos;
             _visualizationManager.HighlightCells(_allowedMoves);
-            
         }
 
-        public void Deselect()
+        private void Deselect()
         {
             _visualizationManager.ClearHighlightCells();
             SelectedFigure = null;
@@ -144,14 +115,14 @@ namespace SimpleAR.Examples.Chess.Scripts
 
         public bool MoveFigure(int x, int y)
         {
-            if(SelectedFigure == null)
+            if (SelectedFigure == null)
                 return false;
-            
-            bool isOk = true;
 
-            if(_allowedMoves[x,y])
+            var isOk = true;
+            
+            if (x != -1 && y != -1 && _allowedMoves[x, y])
             {
-                Figure c = FigurePositions[x, y];
+                var c = FigurePositions[x, y];
                 if (c != null && c.colour.Bool() != isWhiteTurn)
                 {
                     activeFigures.Remove(c.gameObject);
@@ -164,28 +135,29 @@ namespace SimpleAR.Examples.Chess.Scripts
                     }
                 }
 
-                FigurePositions[SelectedFigure.Cell.X, SelectedFigure.Cell.Y] = null;
+                FigurePositions[SelectedFigure.Cell.x, SelectedFigure.Cell.y] = null;
                 _visualizationManager.MoveFigure(SelectedFigure, x, y);
-                SelectedFigure.Cell = new IntCell(x,y);
+                SelectedFigure.Cell = new IntCell(x, y);
                 FigurePositions[x, y] = SelectedFigure;
                 isWhiteTurn = !isWhiteTurn;
             }
             else
+            {
                 isOk = false;
+            }
 
             _visualizationManager.ClearHighlightCells();
             SelectedFigure = null;
             return isOk;
-
         }
 
-        public void EndGame()
+        private void EndGame()
         {
             Debug.Log(isWhiteTurn ? "White team won!" : "Black team won!");
             foreach (var go in activeFigures)
                 Destroy(go);
             isWhiteTurn = true;
-            
+
             _visualizationManager.ClearHighlightCells();
 
             InstantiateAllFigures();

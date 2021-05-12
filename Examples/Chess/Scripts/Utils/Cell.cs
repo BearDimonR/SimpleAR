@@ -1,37 +1,41 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-namespace SimpleAR.Examples.Chess.Scripts
+namespace SimpleAR.Examples.Chess.Scripts.Utils
 {
-    [System.Serializable]
+    [Serializable]
     public class Cell<T>
     {
-        [SerializeField]
-        public T X;
-        [SerializeField]
-        public T Y;
+        [SerializeField] public T x;
+
+        [SerializeField] public T y;
 
         public Cell(T x, T y)
         {
-            X = x;
-            Y = y;
+            this.x = x;
+            this.y = y;
         }
 
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
                 return false;
-            Cell<T> o = (Cell<T>) obj;
-            return X.Equals(o.X) && Y.Equals(o.Y);
+            var o = (Cell<T>) obj;
+            return x.Equals(o.x) && y.Equals(o.y);
         }
     }
-    
-    public class IntCell: Cell<int>
+
+    public class IntCell : Cell<int>
     {
-        public IntCell(int x, int y) : base(x, y) { }
+        public IntCell(int x, int y) : base(x, y)
+        {
+        }
     }
 
     public class FloatCell : Cell<float>
     {
-        public FloatCell(float x, float y) : base(x, y) { }
+        public FloatCell(float x, float y) : base(x, y)
+        {
+        }
     }
 }

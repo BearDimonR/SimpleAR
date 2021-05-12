@@ -6,17 +6,21 @@ namespace SimpleAR.MouseEmulation.Scripts
 {
     public class MouseInputManager : MonoBehaviour
     {
-        #region Singleton
-
-        protected static MouseInputManager _instance;
-
-        public static MouseInputManager Instance => _instance;
-
-        #endregion
-
         #region Events
 
         public static Action OnEventOccured;
+
+        #endregion
+
+        private IEnumerator Wait()
+        {
+            yield return new WaitForSeconds(TimeSeconds);
+            _isCoroutines = false;
+        }
+
+        #region Singleton
+
+        public static MouseInputManager Instance { get; private set; }
 
         #endregion
 
@@ -24,39 +28,36 @@ namespace SimpleAR.MouseEmulation.Scripts
 
         public static float TimeSeconds = 0.5f;
 
-        public GestureAction Action;
-        public GestureContinuous Continuous;
-        public Vector2 CursorPosition;
-        public int Width = 50;
-        public int Height = 75;
-        public float Depth = 2f;
+        public GestureAction action;
+        public GestureContinuous continuous;
+        public Vector2 cursorPosition;
+        public int width = 50;
+        public int height = 75;
+        public float depth = 2f;
 
-        private bool _isCoroutines = false;
-        private bool _isGrab = false;
-        
+        private bool _isCoroutines;
+        private bool _isGrab;
+
         #endregion
 
         #region UnityEvents
 
         protected void Awake()
         {
-            if (_instance == null)
-            {
-                _instance = this;
-            }
+            if (Instance == null)
+                Instance = this;
             else
                 gameObject.SetActive(false);
         }
 
         protected void Update()
         {
+            cursorPosition = Input.mousePosition;
 
-            CursorPosition = Input.mousePosition;
-            
-            bool down = Input.GetMouseButtonDown(0);
-            bool up = Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.F);
-            bool hold = Input.GetMouseButton(0);
-            bool grab = Input.GetKeyDown(KeyCode.F);
+            var down = Input.GetMouseButtonDown(0);
+            var up = Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.F);
+            var hold = Input.GetMouseButton(0);
+            var grab = Input.GetKeyDown(KeyCode.F);
 
             if (down)
             {
@@ -69,44 +70,40 @@ namespace SimpleAR.MouseEmulation.Scripts
                 StopAllCoroutines();
                 _isCoroutines = false;
                 _isGrab = true;
-                Action = GestureAction.GrabAction;
+                action = GestureAction.GrabAction;
             }
             else if (up && _isCoroutines)
             {
-                Continuous = GestureContinuous.NoContinuous;
-                Action = GestureAction.ClickAction;
+                continuous = GestureContinuous.NoContinuous;
+                action = GestureAction.ClickAction;
             }
             else if (up && !_isCoroutines)
             {
                 if (_isGrab)
                 {
-                    Action = GestureAction.ReleaseAction;
+                    action = GestureAction.ReleaseAction;
                     _isGrab = false;
                 }
                 else
-                    Action = GestureAction.NoAction;
-                Continuous = GestureContinuous.NoContinuous;
+                {
+                    action = GestureAction.NoAction;
+                }
+
+                continuous = GestureContinuous.NoContinuous;
             }
             else if (hold && !_isCoroutines)
             {
-                Continuous = GestureContinuous.Hold;
+                continuous = GestureContinuous.Hold;
             }
             else
             {
-                Continuous = GestureContinuous.NoContinuous;
-                Action = GestureAction.NoAction;
+                continuous = GestureContinuous.NoContinuous;
+                action = GestureAction.NoAction;
             }
-            
+
             OnEventOccured.Invoke();
         }
 
         #endregion
-
-        IEnumerator Wait()
-        {
-            yield return new WaitForSeconds(TimeSeconds);
-            _isCoroutines = false;
-        }
-
     }
 }

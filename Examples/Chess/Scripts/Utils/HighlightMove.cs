@@ -2,7 +2,7 @@
 
 namespace SimpleAR.Examples.Chess.Scripts.Utils
 {
-    public class HighlighMove: MonoBehaviour
+    public class HighlightMove : MonoBehaviour
     {
     }
 }

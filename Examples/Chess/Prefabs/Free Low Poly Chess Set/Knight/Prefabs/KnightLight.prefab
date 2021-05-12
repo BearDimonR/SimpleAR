@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5835684655262436835}
   - component: {fileID: 7350332936909994033}
   - component: {fileID: -213066006227362498}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: KnightLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -124,6 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57dce0a66cb84b118139639d746f4f2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colour: 0
-  figureType: 0
+  colour: 1
+  figureType: 2
   handTag: Player
+  boardManager: {fileID: 0}
