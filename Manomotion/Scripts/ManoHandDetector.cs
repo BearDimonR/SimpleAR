@@ -1,9 +1,18 @@
-﻿using UnityEngine;
-
-namespace SimpleAR.Manomotion.Scripts
+﻿namespace SimpleAR.Manomotion.Scripts
 {
-    public class ManoHandDetector: HandDetector
+    public class ManoHandDetector : HandDetector
     {
+        protected new void Start()
+        {
+            base.Start();
+            OnHandDetected.Invoke();
+        }
+
+        public void LateUpdate()
+        {
+            if (!IsActive)
+                ManomotionManager.Instance.StopProcessing();
+        }
 
         protected override void InitInstance()
         {
@@ -12,19 +21,13 @@ namespace SimpleAR.Manomotion.Scripts
 
         protected override void ProceedOutput()
         {
-            
-            //TODO BUG - ONHANDDETECTED WORKS WITH HANDCOLLIDER
-            
-            //TODO BUG - ON HAND LOST ON HAND FOUND
+            var manoInfo = ManomotionManager.Instance.Hand_infos[0];
 
-            HandInfoUnity manoInfo = ManomotionManager.Instance.Hand_infos[0];
-
-            HandInfo mano = ConvertHandInfo(manoInfo);
+            var mano = ConvertHandInfo(manoInfo);
             HandInfos.Insert(mano);
 
             InvokeAction(mano.Action);
             InvokeContinuous(mano.Continuous);
-
         }
 
         private HandInfo ConvertHandInfo(HandInfoUnity infoUnity)
@@ -34,19 +37,17 @@ namespace SimpleAR.Manomotion.Scripts
             var (actionGesture, contGesture) = ConvertGestureInfo(info.gesture_info);
             return new HandInfo(box, fingers, actionGesture, contGesture, info.tracking_info.depth_estimation);
         }
-        
-        private (BoundingBox,HandPoints) ConvertTrackingInfo(TrackingInfo tracking)
+
+        private (BoundingBox, HandPoints) ConvertTrackingInfo(TrackingInfo tracking)
         {
-            var camera = Camera.main;
             var box = tracking.bounding_box;
-            box.top_left = camera.ViewportToWorldPoint(box.top_left);
+            box.top_left = Camera.ViewportToWorldPoint(box.top_left);
             box.top_left.z = tracking.depth_estimation;
             var points = new HandPoints();
             var palm = tracking.palm_center;
             palm.z = tracking.depth_estimation;
-            points.PalmCentre = camera.ViewportToWorldPoint(palm);
+            points.PalmCentre = Camera.ViewportToWorldPoint(palm);
             return (new BoundingBox(box.top_left, box.width, box.height), points);
-
         }
 
         private (GestureAction, GestureContinuous) ConvertGestureInfo(GestureInfo gesture)
@@ -58,11 +59,11 @@ namespace SimpleAR.Manomotion.Scripts
                     gestureAction = GestureAction.ClickAction;
                     break;
                 case ManoGestureTrigger.PICK:
-                case ManoGestureTrigger.GRAB_GESTURE:    
+                case ManoGestureTrigger.GRAB_GESTURE:
                     gestureAction = GestureAction.GrabAction;
                     break;
                 case ManoGestureTrigger.DROP:
-                case ManoGestureTrigger.RELEASE_GESTURE:    
+                case ManoGestureTrigger.RELEASE_GESTURE:
                     gestureAction = GestureAction.ReleaseAction;
                     break;
                 default:
@@ -83,13 +84,8 @@ namespace SimpleAR.Manomotion.Scripts
                     gestureContinuous = GestureContinuous.NoContinuous;
                     break;
             }
-            return (gestureAction, gestureContinuous);
-        }
 
-        public void LateUpdate()
-        {
-            if(!IsActive)
-                ManomotionManager.Instance.StopProcessing();
+            return (gestureAction, gestureContinuous);
         }
     }
 }

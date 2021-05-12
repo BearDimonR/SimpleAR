@@ -9,7 +9,7 @@ namespace SimpleAR
         public Vector3 handPosition;
 
         public bool isDetected;
-        public static SimpleARHandCollider Instance { get; set; }
+        public static SimpleARHandCollider Instance { get; private set; }
 
         private void Awake()
         {
@@ -18,11 +18,13 @@ namespace SimpleAR
                 Instance = this;
                 HandDetector.OnHandDetected += () =>
                 {
+                    Debug.Log("OnHandDetected");
                     isDetected = true;
                     gameObject.SetActive(true);
                 };
                 HandDetector.OnHandLost += () =>
                 {
+                    Debug.Log("OnHandLost");
                     isDetected = false;
                     gameObject.SetActive(false);
                 };
